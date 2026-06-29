@@ -14,20 +14,23 @@ files; if something isn't in your docs, it says so instead of making it up.
 
 ```
 $ ask-my-docs ask "How much does the Orbit Pro plan cost?"
-╭───────────────────────────── Answer ─────────────────────────────╮
-│ The Orbit Pro plan costs $49 per user per month. [orbit-handbook.md] │
-╰───────────────────────────────────────────────────────────────────╯
+
+Answer
+  The Orbit Pro plan costs $49 per user per month. [orbit-handbook.md]
+
 Sources: orbit-handbook.md
 ```
 
 ## How it works
 
 ```
-documents ──▶ chunk ──▶ embed (local) ──▶ Chroma vector store
-                                                │
-                    question ──▶ retrieve top-k ─┤
-                                                ▼
-                                     Claude (grounded answer + citations)
+documents (.md / .txt / .pdf)
+   │  chunk + embed locally
+   ▼
+Chroma vector store
+   │  retrieve the top-k passages for a question
+   ▼
+Claude  ──▶  grounded answer + source citations
 ```
 
 Embeddings run locally (sentence-transformers via Chroma), so the index needs no
@@ -74,17 +77,15 @@ separately:
 python evals/run_evals.py
 ```
 
-```
-                         RAG Evaluation
-┏━━━┳━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━┳━━━━┳━━━━━━━━━━┳━━━━━━━━━━┓
-┃ # ┃ Question                          ┃ Hit@k ┃ RR ┃ Faithful ┃ Relevant ┃
-┡━━━╇━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━╇━━━━━━━╇━━━━╇━━━━━━━━━━╇━━━━━━━━━━┩
-│ 1 │ How much does the Orbit Pro plan… │  ✅   │1.00│   ✅     │   ✅     │
-│ … │                                   │       │    │          │          │
-└───┴───────────────────────────────────┴───────┴────┴──────────┴──────────┘
+Example run against the sample docs:
 
-Hit@k: 100%   MRR: 0.92   Faithfulness: 100%   Answer relevance: 100%
-```
+| # | Question                                  | Hit@k | RR   | Faithful | Relevant |
+|---|-------------------------------------------|-------|------|----------|----------|
+| 1 | How much does the Orbit Pro plan cost?    | yes   | 1.00 | yes      | yes      |
+| 2 | API rate limit on the Free tier?          | yes   | 1.00 | yes      | yes      |
+| 3 | Data retention after account deletion?    | yes   | 1.00 | yes      | yes      |
+
+**Hit@k 100% · MRR 0.92 · Faithfulness 100% · Answer relevance 100%**
 
 - Retrieval is scored with `hit@k` and mean reciprocal rank against a labeled
   question set. Those are plain functions (`metrics.py`), so they're deterministic
