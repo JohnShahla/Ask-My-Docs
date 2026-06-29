@@ -1,0 +1,6 @@
+{"question": "How much does the Orbit Pro plan cost per month?", "relevant_sources": ["orbit-handbook.md"]}
+{"question": "What is the API rate limit on the Free tier?", "relevant_sources": ["orbit-api.md"]}
+{"question": "How long does Orbit retain customer data after an account is deleted?", "relevant_sources": ["orbit-handbook.md"]}
+{"question": "Which authentication method does the Orbit API use?", "relevant_sources": ["orbit-api.md"]}
+{"question": "Is Orbit SOC 2 compliant?", "relevant_sources": ["orbit-handbook.md"]}
+{"question": "What HTTP status code does the API return when the rate limit is exceeded?", "relevant_sources": ["orbit-api.md"]}
